@@ -12,22 +12,44 @@ namespace PrøveEksamen3Ny
 	// NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
 	public class Service1 : IService1
 	{
-		public string GetData(int value)
+		public static List<Catch> CatchList = new List<Catch>
 		{
-			return string.Format("You entered: {0}", value);
+			new Catch {Art = "TestArt", Id = 1, Navn = "TestNavn", Sted = "TestSted", Uge = 1, Vægt = 1.1},
+			new Catch {Art = "TestArt2", Id = 2, Navn = "TestNavn2", Sted = "TestSted2", Uge = 2, Vægt = 2.2}
+		};
+		
+
+		public List<Catch> GetCatches()
+		{
+			return CatchList;
 		}
 
-		public CompositeType GetDataUsingDataContract(CompositeType composite)
+		public Catch GetOneCatch(string id)
 		{
-			if (composite == null)
+			foreach (Catch c in CatchList)
 			{
-				throw new ArgumentNullException("composite");
+				if (c.Id == Int32.Parse(id))
+				{
+					return c;
+				}
 			}
-			if (composite.BoolValue)
-			{
-				composite.StringValue += "Suffix";
-			}
-			return composite;
+			throw new IndexOutOfRangeException("Catch med id findes ikke");
+		}
+
+		public void AddCatch(Catch newCatch)
+		{
+			CatchList.Add(newCatch);
+		}
+
+		public void DeleteCatch(string id)
+		{
+			CatchList.RemoveAll(x => x.Id == Int32.Parse(id));
+		}
+
+		public void UpdateCatch(Catch myCatch)
+		{
+			CatchList.RemoveAll(x => x.Id == myCatch.Id);
+			CatchList.Add(myCatch);
 		}
 	}
 }
